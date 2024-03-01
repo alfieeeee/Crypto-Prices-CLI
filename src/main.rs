@@ -22,7 +22,7 @@ async fn main() {
     println!("Getting prices for the {:?} coins...", args.len());
     for arg in &args {
         match get_price(arg.to_uppercase()).await {
-            Ok(data) => println!("Current {} price: ${} ({}%)", arg.to_uppercase(), data.lastPrice, data.priceChangePercent),
+            Ok(data) => println!("{} price: ${} ({}%)", arg.to_uppercase(), data.lastPrice, data.priceChangePercent),
             Err(e) => eprintln!("Error: {}", e),
         }
     }
