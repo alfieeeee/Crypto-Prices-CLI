@@ -3,14 +3,16 @@ use std::env;
 use reqwest::Error;
 
 #[derive(Deserialize)]
+#[allow(non_snake_case)]
 struct Price {
-    price: String,
+    priceChangePercent: String,
+    lastPrice: String,
 }
 
-async fn get_price(symbol: String) -> Result<String, Error> {
-    let url = format!("https://api.binance.com/api/v3/ticker/price?symbol={}USDT", symbol);
+async fn get_price(symbol: String) -> Result<Price, Error> {
+    let url = format!("https://api.binance.com/api/v3/ticker/24hr?symbol={}USDT", symbol);
     let response = reqwest::get(&url).await?.json::<Price>().await?;
-    Ok(response.price)
+    Ok(response)
 }
 
 #[tokio::main]
@@ -20,7 +22,7 @@ async fn main() {
     println!("Getting prices for the {:?} coins...", args.len());
     for arg in &args {
         match get_price(arg.to_uppercase()).await {
-            Ok(price) => println!("Current {} price: ${}", arg.to_uppercase(), price),
+            Ok(data) => println!("Current {} price: ${} ({}%)", arg.to_uppercase(), data.lastPrice, data.priceChangePercent),
             Err(e) => eprintln!("Error: {}", e),
         }
     }
