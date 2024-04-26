@@ -23,7 +23,7 @@ async fn main() {
     for arg in &args {
         match get_price(arg.to_uppercase()).await {
             Ok(data) => println!("{} price: ${} ({}%)", arg.to_uppercase(), data.lastPrice, data.priceChangePercent),
-            Err(e) => eprintln!("Error: {}", e),
+            Err(_e) => eprintln!("{} does not exist.", arg.to_uppercase()),
         }
     }
 }
